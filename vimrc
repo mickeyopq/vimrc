@@ -14,8 +14,8 @@ syntax on
 "--------
 " color scheme
 set background=dark
-color solarized
-
+" color solarized   "註解顏色太鳥
+colorscheme sunshine
 " highlight current line
 au WinLeave * set nocursorline nocursorcolumn
 au WinEnter * set cursorline cursorcolumn
@@ -34,7 +34,7 @@ set nofoldenable                                                  " disable fold
 set confirm                                                       " prompt when existing from an unsaved file
 set backspace=indent,eol,start                                    " More powerful backspacing
 set t_Co=256                                                      " Explicitly tell vim that the terminal has 256 colors "
-set mouse=a                                                       " use mouse in all modes
+" set mouse=a                                                       " use mouse in all modes
 set report=0                                                      " always report number of lines changed                "
 set nowrap                                                        " dont wrap lines
 set scrolloff=5                                                   " 5 lines above/below cursor when scrolling
@@ -44,7 +44,8 @@ set showcmd                                                       " show typed c
 set title                                                         " show file in titlebar
 set laststatus=2                                                  " use 2 lines for the status bar
 set matchtime=2                                                   " show matching bracket for 0.2 seconds
-set matchpairs+=<:>                                               " specially for html
+"這個在html檔用就好>><<
+" set matchpairs+=<:>                                               " specially for html
 " set relativenumber
 
 " Default Indentation
@@ -151,7 +152,7 @@ let NERDTreeWinPos = "right"
 
 " nerdcommenter
 let NERDSpaceDelims=1
-" nmap <D-/> :NERDComToggleComment<cr>
+"nmap ,cc :NERDComToggleComment<cr>
 let NERDCompactSexyComs=1
 
 " ZenCoding
@@ -198,7 +199,7 @@ let g:ctrlp_custom_ignore = '\.git$\|\.hg$\|\.svn$'
 " Keybindings for plugin toggle
 nnoremap <F2> :set invpaste paste?<CR>
 set pastetoggle=<F2>
-nmap <F5> :TagbarToggle<cr>
+" nmap <F5> :TagbarToggle<cr>
 nmap <F6> :NERDTreeToggle<cr>
 nmap <F3> :GundoToggle<cr>
 nmap <F4> :IndentGuidesToggle<cr>
@@ -210,10 +211,10 @@ nnoremap <leader>v V`]
 " Useful Functions
 "------------------
 " easier navigation between split windows
-nnoremap <c-j> <c-w>j
-nnoremap <c-k> <c-w>k
-nnoremap <c-h> <c-w>h
-nnoremap <c-l> <c-w>l
+" nnoremap <c-j> <c-w>j
+" nnoremap <c-k> <c-w>k
+" nnoremap <c-h> <c-w>h
+" nnoremap <c-l> <c-w>l
 
 " When editing a file, always jump to the last cursor position
 autocmd BufReadPost *
@@ -230,11 +231,11 @@ cmap w!! %!sudo tee >/dev/null %
 nmap <silent> <leader>ev :e $MYVIMRC<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
 
-" sublime key bindings
-nmap <D-]> >>
-nmap <D-[> <<
-vmap <D-[> <gv
-vmap <D-]> >gv
+" sublime key bindings  這個快鍵和esc衝了
+nmap > >><esc><esc>
+nmap < <<<esc><esc>
+vmap < <gv
+vmap > >gv
 
 " eggcache vim
 nnoremap ; :
@@ -249,20 +250,48 @@ nnoremap ; :
 if has("gui_running")
     set go=aAce  " remove toolbar
     "set transparency=30
-    set guifont=Monaco:h13
+    set guifont=Consolas:h13
     set showtabline=2
     set columns=140
     set lines=40
     noremap <D-M-Left> :tabprevious<cr>
     noremap <D-M-Right> :tabnext<cr>
-    map <D-1> 1gt
-    map <D-2> 2gt
-    map <D-3> 3gt
-    map <D-4> 4gt
-    map <D-5> 5gt
-    map <D-6> 6gt
-    map <D-7> 7gt
-    map <D-8> 8gt
-    map <D-9> 9gt
-    map <D-0> :tablast<CR>
+    map <C-1> 1gt
+    map <C-2> 2gt
+    map <C-3> 3gt
+    map <C-4> 4gt
+    map <C-5> 5gt
+    map <C-6> 6gt
+    map <C-7> 7gt
+    map <C-8> 8gt
+    map <C-9> 9gt
+    map <C-0> :tablast<CR>
 endif
+" Commenting blocks of code.
+" autocmd FileType c,cpp,java,scala,go let b:comment_leader = '// '
+" autocmd FileType sh,ruby,python   let b:comment_leader = '# '
+" autocmd FileType conf,fstab       let b:comment_leader = '# '
+" autocmd FileType tex              let b:comment_leader = '% '
+" autocmd FileType mail             let b:comment_leader = '> '
+" autocmd FileType vim              let b:comment_leader = '" '
+" noremap <silent> ,cc :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR>
+" noremap <silent> ,cu :<C-B>silent <C-E>s/^\t*<C-R>=escape(b:comment_leader,'*\/')<CR>//e<CR>:nohlsearch<CR>
+"備份一下
+" noremap <silent> ,cc :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR>
+" noremap <silent> ,cu :<C-B>silent <C-E>s/^\V *<C-R>=escape(b:comment_leader,'\/')<CR>//e<CR>:nohlsearch<CR>
+"auto run key settings~~
+autocmd FileType ruby nmap <f5> :!ruby %<CR>
+autocmd FileType python nmap <f5> :!python %<CR>
+autocmd FileType go nmap <f5> :!go run %<CR>
+autocmd FileType c nmap <f5> :!gcc %<CR>
+autocmd FileType c nmap <C-f5> :!./a.out<CR>
+"在當前行加入func:行數
+autocmd FileType c map <C-i> oprintf("\n\033=================\033;\n");<end><home><esc>
+autocmd FileType go map <C-i> ofmt.Println("=================")<esc><home><esc>
+map <C-c> :'a,'b co 'c<cr>
+""剪下ma到mb 貼上mc
+map <C-x> :'a,'b m 'c<cr>
+"刪除ma到mb
+map <C-d> :'a,'bd<cr>
+"""在ma到mb行上，使用取代
+map <C-h> :'a,'bs/
